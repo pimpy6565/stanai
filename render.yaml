@@ -4,16 +4,15 @@ services:
     env: python
     plan: free
     region: ohio
+    pythonVersion: "3.10"  # More compatible than 3.13
     buildCommand: |
-      # Explicitly ignore pyproject.toml if it doesn't exist
       python -m pip install --upgrade pip setuptools wheel
-      PIP_IGNORE_INSTALLED=1 pip install --no-cache-dir --no-build-isolation --prefer-binary -r requirements.txt
+      pip install --only-binary :all: --no-cache-dir -r requirements.txt
     startCommand: gunicorn --worker-tmp-dir /dev/shm --workers=1 --threads=4 --timeout 120 app:app
     envVars:
       - key: PORT
         value: 5000
       - key: PYTHONUNBUFFERED
         value: 1
-    
-  - key: HUGGINGFACEHUB_API_TOKEN  # Correct name
-    value: ""  # Still keep empty here
+      - key: HUGGINGFACEHUB_API_TOKEN
+        value:  hf_''#  Set in Render dashboard

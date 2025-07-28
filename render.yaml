@@ -2,5 +2,15 @@ services:
   - type: web
     name: union-ai-assistant
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    plan: free
+    region: ohio  # Best for free tier
+    buildCommand: |
+      pip install -r requirements.txt
+    startCommand: gunicorn --worker-tmp-dir /dev/shm --workers=1 --threads=4 --timeout 120 app:app
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: HUGGINGFACEHUB_API_TOKEN
+        value: your_hf_token_here  # Set this in Render dashboard

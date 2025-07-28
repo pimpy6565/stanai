@@ -13,5 +13,5 @@ services:
         value: 5000
       - key: PYTHONUNBUFFERED
         value: 1
-      - key: HUGGINGFACEHUB_API_TOKEN
-        value: your_hf_token_here
+      - key: HUGGINGFACEHUB
+        value: ''

@@ -14,5 +14,6 @@ services:
         value: 5000
       - key: PYTHONUNBUFFERED
         value: 1
-      - key: HUGGINGFACEHUB_API_TOKEN  # Fixed variable name
-        value: your_hf_token_here  # Set this in Render's dashboard
+    
+  - key: HUGGINGFACEHUB_API_TOKEN  # Correct name
+    value: ""  # Still keep empty here

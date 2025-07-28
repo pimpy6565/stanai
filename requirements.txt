@@ -2,9 +2,9 @@ flask==3.0.0
 gunicorn==21.2.0
 langchain==0.0.346
 langchain-community==0.0.11
-faiss-cpu==1.7.4  # Lighter than ChromaDB
+faiss-cpu==1.7.4
 huggingface-hub==0.19.4
 sentence-transformers==2.2.2
 pypdf==3.17.1
-torch==2.0.1+cpu  # Lighter version
+torch==2.7.1+cpu  # Updated to latest stable CPU version
 --extra-index-url https://download.pytorch.org/whl/cpu

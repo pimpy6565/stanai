@@ -6,4 +6,5 @@ faiss-cpu==1.7.4
 huggingface-hub==0.22.2
 sentence-transformers==2.7.0
 pypdf==3.17.1
-torch==2.7.1 --extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.1 --extra-index-url https://download.pytorch.org/whl/cpu
+numpy==1.26.4  # Explicitly added to prevent source build

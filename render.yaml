@@ -6,10 +6,12 @@ services:
     region: ohio
     buildCommand: |
       pip install --upgrade pip setuptools wheel
-      pip install --no-cache-dir -r requirements.txt
+      pip install --no-cache-dir --prefer-binary -r requirements.txt
     startCommand: gunicorn --worker-tmp-dir /dev/shm --workers=1 --threads=4 --timeout 120 app:app
     envVars:
       - key: PORT
         value: 5000
       - key: PYTHONUNBUFFERED
         value: 1
+      - key: HUGGINGFACEHUB_API_TOKEN
+        value: your_hf_token_here

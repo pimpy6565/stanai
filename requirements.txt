@@ -1,10 +1,9 @@
 flask==3.0.0
 gunicorn==21.2.0
-langchain==0.1.0
-langchain-community==0.0.29
+langchain==0.1.16
+langchain-community==0.0.34
 faiss-cpu==1.7.4
-huggingface-hub==0.19.4
-sentence-transformers==2.2.2
+huggingface-hub==0.22.2
+sentence-transformers==2.7.0
 pypdf==3.17.1
-torch==2.2.1 --extra-index-url https://download.pytorch.org/whl/cpu
-tqdm>=4.65.0  # Required by sentence-transformers
+torch==2.2.2 --extra-index-url https://download.pytorch.org/whl/cpu

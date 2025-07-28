@@ -5,13 +5,14 @@ services:
     plan: free
     region: ohio
     buildCommand: |
-      pip install --upgrade pip setuptools wheel
-      pip install --no-cache-dir --prefer-binary -r requirements.txt
+      # Explicitly ignore pyproject.toml if it doesn't exist
+      python -m pip install --upgrade pip setuptools wheel
+      PIP_IGNORE_INSTALLED=1 pip install --no-cache-dir --no-build-isolation --prefer-binary -r requirements.txt
     startCommand: gunicorn --worker-tmp-dir /dev/shm --workers=1 --threads=4 --timeout 120 app:app
     envVars:
       - key: PORT
         value: 5000
       - key: PYTHONUNBUFFERED
         value: 1
-      - key: HUGGINGFACEHUB
-        value: ''
+      - key: HUGGINGFACEHUB_API_TOKEN  # Fixed variable name
+        value: your_hf_token_here  # Set this in Render's dashboard

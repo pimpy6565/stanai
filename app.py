@@ -96,7 +96,8 @@ def index():
                 qa_chain = initialize_components()
 
             print("Question submitted:", query)
-            answer = qa_chain.run(query)
+            result = qa_chain.invoke({"query": query})
+            answer = result["result"] if isinstance(result, dict) else result
 
             if not answer or answer.strip() == "":
                 print("Empty response received from model.")

@@ -1,10 +1,10 @@
 from flask import Flask, request, render_template_string
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings  # New recommended import
 from langchain_community.vectorstores import FAISS
-from langchain_community.llms import HuggingFaceHub
 from langchain.chains import RetrievalQA
+from langchain.llms import HuggingFaceEndpoint
+from langchain.embeddings import HuggingFaceInferenceAPIEmbeddings
 import os
 import warnings
 
@@ -14,17 +14,17 @@ app = Flask(__name__)
 
 # Configuration
 PDF_PATH = "union_contract.pdf"
-MODEL_NAME = "sentence-transformers/paraphrase-MiniLM-L3-v2"
-LLM_REPO = "google/flan-t5-small"
+EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"
+LLM_MODEL = "google/flan-t5-small"
+API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 qa_chain = None  # Lazy loaded later
 
-# Initialize components
 def initialize_components():
     print("Loading PDF...")
     loader = PyPDFLoader(PDF_PATH)
     pages = loader.load()
-    
+
     print("Splitting documents...")
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=800,
@@ -32,26 +32,30 @@ def initialize_components():
         length_function=len
     )
     docs = splitter.split_documents(pages)
-    
-    print("Loading embeddings...")
-    embeddings = HuggingFaceEmbeddings(model_name=MODEL_NAME)
-    
+
+    print("Loading hosted embeddings...")
+    embeddings = HuggingFaceInferenceAPIEmbeddings(
+        api_key=API_TOKEN,
+        model_name=EMBEDDING_MODEL
+    )
+
     print("Creating vector store...")
     vectorstore = FAISS.from_documents(docs, embeddings)
-    
-    print("Loading LLM...")
-    llm = HuggingFaceHub(
-        repo_id=LLM_REPO,
-        model_kwargs={"temperature": 0.2, "max_length": 256},
-        huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN")
+
+    print("Loading hosted LLM...")
+    llm = HuggingFaceEndpoint(
+        repo_id=LLM_MODEL,
+        huggingfacehub_api_token=API_TOKEN,
+        temperature=0.2,
+        max_length=256
     )
-    
+
     print("Creating QA chain...")
     qa = RetrievalQA.from_chain_type(
         llm=llm,
         retriever=vectorstore.as_retriever(search_kwargs={"k": 3})
     )
-    
+
     return qa
 
 HTML_TEMPLATE = """<!DOCTYPE html>
@@ -87,5 +91,5 @@ def index():
     return render_template_string(HTML_TEMPLATE, answer=answer)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render uses dynamic PORT
+    port = int(os.environ.get("PORT", 5000))  # For Render
     app.run(host="0.0.0.0", port=port)

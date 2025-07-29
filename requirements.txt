@@ -7,4 +7,4 @@ huggingface-hub
 sentence-transformers
 pypdf
 torch --extra-index-url https://download.pytorch.org/whl/cpu
-numpy==1.26.4  # Explicitly added to prevent source build
+numpy # Explicitly added to prevent source build

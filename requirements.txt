@@ -1,9 +1,9 @@
-pypdf
-flask
+Flask
 langchain
-sentence-transformers
-faiss-cpu
-huggingface-hub
 langchain-community
 langchain-text-splitters
+huggingface-hub
+sentence-transformers
+faiss-cpu
+pypdf
 gunicorn

@@ -1,112 +1,65 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, jsonify, render_template
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
-from langchain_community.llms import HuggingFaceEndpoint
+from langchain_community.llms import HuggingFaceHub
 from langchain_community.embeddings import HuggingFaceEmbeddings
-import os
-import warnings
+import os, warnings
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 app = Flask(__name__)
-
-# Configuration
 PDF_PATH = "union_contract.pdf"
-EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"
-LLM_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"
+EMBEDDING_MODEL = "sentence-transformers/paraphrase‑MiniLM‑L3‑v2"
+LLM_MODEL = "google/flan‑t5‑base"
 API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
-
-qa_chain = None  # Lazy loaded on first request
+qa_chain = None
 
 def initialize_components():
-    print("Loading PDF...")
     loader = PyPDFLoader(PDF_PATH)
     pages = loader.load()
-
-    print("Splitting documents...")
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=800,
-        chunk_overlap=200,
-        length_function=len
-    )
+    splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200)
     docs = splitter.split_documents(pages)
 
-    print("Creating embeddings...")
-    embeddings = HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL
-    )
-
-    print("Creating vector store...")
+    embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
     vectorstore = FAISS.from_documents(docs, embeddings)
 
-    print("Loading hosted LLM...")
-    llm = HuggingFaceEndpoint(
+    llm = HuggingFaceHub(
         repo_id=LLM_MODEL,
         huggingfacehub_api_token=API_TOKEN,
         temperature=0.2,
-        max_new_tokens=256
+        max_length=256
     )
 
-    print("Testing LLM output...")
     try:
-        test_response = llm.invoke("Say hello")
-        print("Model test response:", test_response)
+        llm.invoke("Hello")
     except Exception as e:
-        print("LLM error:", e)
-        raise RuntimeError("LLM failed. Check your token or model ID.")
+        raise RuntimeError(f"LLM error — check token or model: {e}")
 
-    print("Creating QA chain...")
-    qa = RetrievalQA.from_chain_type(
+    return RetrievalQA.from_chain_type(
         llm=llm,
         retriever=vectorstore.as_retriever(search_kwargs={"k": 3})
     )
 
-    return qa
-
-HTML_TEMPLATE = """<!DOCTYPE html>
-<html>
-<head><title>Union Contract Assistant</title></head>
-<body>
-  <h1>Ask Your Union Contract</h1>
-  <form method="POST">
-    <input type="text" name="question" size="60" placeholder="Ask something..." required>
-    <input type="submit" value="Ask">
-  </form>
-  {% if answer %}
-    <h2>Answer:</h2>
-    <p>{{ answer }}</p>
-  {% endif %}
-</body>
-</html>"""
-
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
+    return render_template("index.html")
+
+@app.route("/ask", methods=["POST"])
+def ask():
     global qa_chain
-    answer = ""
-
-    if request.method == "POST":
-        query = request.form["question"]
-        try:
-            if qa_chain is None:
-                qa_chain = initialize_components()
-
-            print("Question submitted:", query)
-            answer = qa_chain.run(query)
-
-            if not answer or answer.strip() == "":
-                print("Empty model response.")
-                answer = "Sorry, the model returned no answer."
-
-            print("Answer received:", answer)
-
-        except Exception as e:
-            print("Error:", e)
-            answer = f"Error: {e}"
-
-    return render_template_string(HTML_TEMPLATE, answer=answer)
+    q = request.json.get("question", "").strip()
+    if not q:
+        return jsonify(error="No question provided"), 400
+    try:
+        if qa_chain is None:
+            qa_chain = initialize_components()
+        ans = qa_chain.run(q).strip() or "No answer from model."
+        return jsonify(answer=ans)
+    except Exception as e:
+        return jsonify(error=str(e)), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # for Render or Heroku
+    port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)

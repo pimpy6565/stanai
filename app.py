@@ -69,16 +69,25 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>"""
 
 @app.route("/", methods=["GET", "POST"])
+qa_chain = None  # Declare globally but don't initialize yet
+
+@app.route("/", methods=["GET", "POST"])
 def index():
+    global qa_chain
     answer = ""
+
     if request.method == "POST":
         query = request.form["question"]
+
         try:
+            if qa_chain is None:
+                qa_chain = initialize_components()
+
             answer = qa_chain.run(query)
         except Exception as e:
             answer = f"Error processing query: {str(e)}"
-    return render_template_string(HTML_TEMPLATE, answer=answer)
 
+    return render_template_string(HTML_TEMPLATE, answer=answer)
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)

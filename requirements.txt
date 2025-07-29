@@ -1,12 +1,14 @@
 flask
 gunicorn
-langchain
+
 langchain-community
 faiss-cpu
 huggingface-hub
 sentence-transformers
-torch==2.1.0+cpu --no-deps
-numpy==1.26.4
+numpy>=1.21.0,<2.0.0
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.1.0+cpu
+langchain==0.3.27
 
 
 langchain-huggingface # New package for embeddings

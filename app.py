@@ -28,8 +28,8 @@ def initialize_components():
     llm = HuggingFaceHub(
         repo_id=LLM_MODEL,
         huggingfacehub_api_token=API_TOKEN,
-        temperature=0.2,
-        max_length=256
+        task="text2text-generation",
+        model_kwargs={"temperature": 0.2, "max_length": 256}
     )
 
     try:

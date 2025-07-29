@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Union Contract Assistant</title>
+  <style>
+    body { background: #121212; color: #eee; font-family: sans-serif; max-width: 600px; margin: auto; padding: 2rem; }
+    h1 { color: #4fc3f7; }
+    input, button { width: 100%; padding: 12px; margin: .5em 0; border-radius: 6px; border: none; }
+    input { background: #1e1e1e; color: #eee; }
+    button { background: #2979ff; color: white; cursor: pointer; }
+    button:hover { background: #1565c0; }
+    #answer { background: #1e1e1e; margin-top: 1rem; padding: 1rem; border-left: 4px solid #4fc3f7; }
+    #error { color: #ff5252; margin-top: .5rem; }
+  </style>
+</head>
+<body>
+  <h1>Union Contract Assistant</h1>
+  <input id="question" placeholder="Ask something..." />
+  <button onclick="ask()">Ask</button>
+  <div id="answer"></div>
+  <div id="error"></div>
+  <script>
+    async function ask() {
+      document.getElementById("answer").textContent = "Thinking...";
+      document.getElementById("error").textContent = "";
+      const resp = await fetch("/ask", {
+        method: "POST",
+        headers: { 'Content-Type':'application/json' },
+        body: JSON.stringify({ question: document.getElementById("question").value })
+      });
+      const data = await resp.json();
+      if (data.answer) {
+        document.getElementById("answer").textContent = data.answer;
+      } else {
+        document.getElementById("answer").textContent = "";
+        document.getElementById("error").textContent = data.error || "Unknown error.";
+      }
+    }
+  </script>
+</body>
+</html>

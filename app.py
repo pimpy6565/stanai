@@ -88,9 +88,12 @@ def index():
         try:
             if qa_chain is None:
                 qa_chain = initialize_components()
+            print("Question submitted:", query)
             answer = qa_chain.run(query)
+            print("Answer received:", answer)
         except Exception as e:
-            answer = f"Error processing query: {str(e)}"
+            print("Error:", e)
+            answer = f"Error: {e}"
 
     return render_template_string(HTML_TEMPLATE, answer=answer)
 

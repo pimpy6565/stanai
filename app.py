@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 # Configuration
 PDF_PATH = "union_contract.pdf"
-MODEL_NAME = "intfloat/e5-small-v2"
+MODEL_NAME = "intfloat/e5-small-v2"#
 LLM_REPO = "google/flan-t5-small"
 
 qa_chain = None  # Lazy loaded later

@@ -35,9 +35,9 @@ def initialize_components():
 
     print("Loading hosted embeddings...")
     embeddings = HuggingFaceEndpointEmbeddings(
-        api_key=API_TOKEN,
+        huggingfacehub_api_token=API_TOKEN,
         model=EMBEDDING_MODEL
-    )
+)
 
     print("Creating vector store...")
     vectorstore = FAISS.from_documents(docs, embeddings)

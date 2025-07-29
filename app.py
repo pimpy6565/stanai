@@ -43,7 +43,7 @@ def initialize_components():
     vectorstore = FAISS.from_documents(docs, embeddings)
 
     print("Loading hosted LLM...")
-llm = HuggingFaceEndpoint(
+    llm = HuggingFaceEndpoint(
     repo_id=LLM_MODEL,
     huggingfacehub_api_token=API_TOKEN,
     model_kwargs={

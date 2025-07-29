@@ -51,7 +51,9 @@ def initialize_components():
         "max_length": 256
     }
 )
-
+    print("Testing model output...")
+    test_response = llm.invoke("Say hello")
+    print("Model test response:", test_response)
     print("Creating QA chain...")
     qa = RetrievalQA.from_chain_type(
         llm=llm,

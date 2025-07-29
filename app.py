@@ -68,7 +68,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </body>
 </html>"""
 
-@app.route("/", methods=["GET", "POST"])
+
 qa_chain = None  # Declare globally but don't initialize yet
 
 @app.route("/", methods=["GET", "POST"])

@@ -6,26 +6,26 @@ from langchain.chains import RetrievalQA
 from langchain_community.llms import HuggingFaceEndpoint
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import os
-import logging
+import warnings
 
-logging.basicConfig(level=logging.INFO)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 app = Flask(__name__)
 
-# === Config ===
+# Configuration
 PDF_PATH = "union_contract.pdf"
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"
-LLM_MODEL = "google/flan-t5-base"
+LLM_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"
 API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
-qa_chain = None  # Lazy-loaded
+qa_chain = None  # Lazy loaded on first request
 
 def initialize_components():
-    logging.info("Loading PDF...")
+    print("Loading PDF...")
     loader = PyPDFLoader(PDF_PATH)
     pages = loader.load()
 
-    logging.info("Splitting documents...")
+    print("Splitting documents...")
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=800,
         chunk_overlap=200,
@@ -33,31 +33,38 @@ def initialize_components():
     )
     docs = splitter.split_documents(pages)
 
-    logging.info("Creating embeddings...")
-    embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
-
-    logging.info("Creating vector store...")
-    vectorstore = FAISS.from_documents(docs, embeddings)
-
-    logging.info("Initializing hosted LLM...")
-    llm = HuggingFaceEndpoint(
-        repo_id=LLM_MODEL,
-        huggingfacehub_api_token=API_TOKEN
+    print("Creating embeddings...")
+    embeddings = HuggingFaceEmbeddings(
+        model_name=EMBEDDING_MODEL
     )
 
-    # test model works
+    print("Creating vector store...")
+    vectorstore = FAISS.from_documents(docs, embeddings)
+
+    print("Loading hosted LLM...")
+    llm = HuggingFaceEndpoint(
+        repo_id=LLM_MODEL,
+        huggingfacehub_api_token=API_TOKEN,
+        model_kwargs={
+            "temperature": 0.2,
+            "max_new_tokens": 256
+        }
+    )
+
+    print("Testing LLM output...")
     try:
-        response = llm.invoke("Say hello")
-        logging.info("Model test response: %s", response)
+        test_response = llm.invoke("Say hello")
+        print("Model test response:", test_response)
     except Exception as e:
-        logging.error("LLM error: %s", e)
+        print("LLM error:", e)
         raise RuntimeError("LLM failed. Check your token or model ID.")
 
-    logging.info("Creating QA chain...")
+    print("Creating QA chain...")
     qa = RetrievalQA.from_chain_type(
         llm=llm,
         retriever=vectorstore.as_retriever(search_kwargs={"k": 3})
     )
+
     return qa
 
 HTML_TEMPLATE = """<!DOCTYPE html>
@@ -87,19 +94,21 @@ def index():
             if qa_chain is None:
                 qa_chain = initialize_components()
 
-            logging.info("Question: %s", query)
+            print("Question submitted:", query)
             answer = qa_chain.run(query)
 
             if not answer or answer.strip() == "":
-                logging.warning("Empty model response.")
+                print("Empty model response.")
                 answer = "Sorry, the model returned no answer."
 
+            print("Answer received:", answer)
+
         except Exception as e:
-            logging.error("Error: %s", e)
+            print("Error:", e)
             answer = f"Error: {e}"
 
     return render_template_string(HTML_TEMPLATE, answer=answer)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5000))  # for Render
     app.run(host="0.0.0.0", port=port)

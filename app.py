@@ -19,7 +19,7 @@ qa_chain = None
 def initialize_components():
     loader = PyPDFLoader(PDF_PATH)
     pages = loader.load()
-    splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=100)
     docs = splitter.split_documents(pages)
 
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)

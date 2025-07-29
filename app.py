@@ -10,15 +10,20 @@ import os, warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 app = Flask(__name__)
+
 PDF_PATH = "union_contract.pdf"
-EMBEDDING_MODEL = "sentence-transformers/paraphrase‑MiniLM‑L3‑v2"
-LLM_MODEL = "google/flan‑t5‑base"
+EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"  # Fixed
+LLM_MODEL = "google/flan-t5-base"  # Fixed
 API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 qa_chain = None
 
 def initialize_components():
+    if not API_TOKEN:
+        raise RuntimeError("Missing Hugging Face API token.")
+
     loader = PyPDFLoader(PDF_PATH)
     pages = loader.load()
+    
     splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200)
     docs = splitter.split_documents(pages)
 
@@ -28,12 +33,14 @@ def initialize_components():
     llm = HuggingFaceHub(
         repo_id=LLM_MODEL,
         huggingfacehub_api_token=API_TOKEN,
-        temperature=0.2,
-        max_length=256
+        model_kwargs={
+            "temperature": 0.2,
+            "max_new_tokens": 256
+        }
     )
 
     try:
-        llm.invoke("Hello")
+        llm.invoke("Hello")  # quick call to validate
     except Exception as e:
         raise RuntimeError(f"LLM error — check token or model: {e}")
 
@@ -52,6 +59,7 @@ def ask():
     q = request.json.get("question", "").strip()
     if not q:
         return jsonify(error="No question provided"), 400
+
     try:
         if qa_chain is None:
             qa_chain = initialize_components()

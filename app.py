@@ -3,8 +3,8 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
-from langchain.llms import HuggingFaceEndpoint
-from langchain.embeddings import HuggingFaceInferenceAPIEmbeddings
+from langchain_community.llms import HuggingFaceEndpoint
+from langchain_huggingface import HuggingFaceEndpointEmbeddings  # updated import
 import os
 import warnings
 
@@ -34,9 +34,9 @@ def initialize_components():
     docs = splitter.split_documents(pages)
 
     print("Loading hosted embeddings...")
-    embeddings = HuggingFaceInferenceAPIEmbeddings(
+    embeddings = HuggingFaceEndpointEmbeddings(
         api_key=API_TOKEN,
-        model_name=EMBEDDING_MODEL
+        model=EMBEDDING_MODEL
     )
 
     print("Creating vector store...")
@@ -44,16 +44,22 @@ def initialize_components():
 
     print("Loading hosted LLM...")
     llm = HuggingFaceEndpoint(
-    repo_id=LLM_MODEL,
-    huggingfacehub_api_token=API_TOKEN,
-    model_kwargs={
-        "temperature": 0.2,
-        "max_length": 256
-    }
-)
+        repo_id=LLM_MODEL,
+        huggingfacehub_api_token=API_TOKEN,
+        model_kwargs={
+            "temperature": 0.2,
+            "max_new_tokens": 256
+        }
+    )
+
     print("Testing model output...")
-    test_response = llm.invoke("Say hello")
-    print("Model test response:", test_response)
+    try:
+        test_response = llm.invoke("Say hello")
+        print("Model test response:", test_response)
+    except Exception as e:
+        print("Model test error:", e)
+        raise RuntimeError("LLM failed to respond correctly. Check token and model status.")
+
     print("Creating QA chain...")
     qa = RetrievalQA.from_chain_type(
         llm=llm,
@@ -88,9 +94,16 @@ def index():
         try:
             if qa_chain is None:
                 qa_chain = initialize_components()
+
             print("Question submitted:", query)
             answer = qa_chain.run(query)
+
+            if not answer or answer.strip() == "":
+                print("Empty response received from model.")
+                answer = "Sorry, the model returned no answer."
+
             print("Answer received:", answer)
+
         except Exception as e:
             print("Error:", e)
             answer = f"Error: {e}"

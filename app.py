@@ -45,10 +45,8 @@ def initialize_components():
     llm = HuggingFaceEndpoint(
         repo_id=LLM_MODEL,
         huggingfacehub_api_token=API_TOKEN,
-        model_kwargs={
-            "temperature": 0.2,
-            "max_new_tokens": 256
-        }
+        temperature=0.2,
+        max_new_tokens=256
     )
 
     print("Testing LLM output...")

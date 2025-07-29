@@ -43,12 +43,14 @@ def initialize_components():
     vectorstore = FAISS.from_documents(docs, embeddings)
 
     print("Loading hosted LLM...")
-    llm = HuggingFaceEndpoint(
-        repo_id=LLM_MODEL,
-        huggingfacehub_api_token=API_TOKEN,
-        temperature=0.2,
-        max_length=256
-    )
+llm = HuggingFaceEndpoint(
+    repo_id=LLM_MODEL,
+    huggingfacehub_api_token=API_TOKEN,
+    model_kwargs={
+        "temperature": 0.2,
+        "max_length": 256
+    }
+)
 
     print("Creating QA chain...")
     qa = RetrievalQA.from_chain_type(

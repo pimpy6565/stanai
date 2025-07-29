@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 # Configuration
 PDF_PATH = "union_contract.pdf"
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"
-LLM_MODEL = "google/flan-t5-small"
+LLM_MODEL = "google/flan-t5-base"
 API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 qa_chain = None  # Lazy load on first request

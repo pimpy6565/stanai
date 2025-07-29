@@ -6,15 +6,18 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.llms import HuggingFaceHub
 from langchain.chains import RetrievalQA
 import os
-
 import warnings
+
 warnings.filterwarnings("ignore", category=FutureWarning)
+
 app = Flask(__name__)
 
 # Configuration
 PDF_PATH = "union_contract.pdf"
 MODEL_NAME = "intfloat/e5-small-v2"
 LLM_REPO = "google/flan-t5-small"
+
+qa_chain = None  # Lazy loaded later
 
 # Initialize components
 def initialize_components():
@@ -51,7 +54,6 @@ def initialize_components():
     
     return qa
 
-qa_chain = initialize_components()
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html>
 <head><title>Union Contract Assistant</title></head>
@@ -68,9 +70,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </body>
 </html>"""
 
-
-qa_chain = None  # Declare globally but don't initialize yet
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     global qa_chain
@@ -78,17 +77,15 @@ def index():
 
     if request.method == "POST":
         query = request.form["question"]
-
         try:
             if qa_chain is None:
                 qa_chain = initialize_components()
-
             answer = qa_chain.run(query)
         except Exception as e:
             answer = f"Error processing query: {str(e)}"
 
     return render_template_string(HTML_TEMPLATE, answer=answer)
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 5000))  # Render uses dynamic PORT
     app.run(host="0.0.0.0", port=port)
-# [Rest of your Flask app code remains the same]

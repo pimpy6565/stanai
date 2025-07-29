@@ -5,8 +5,8 @@ langchain-community
 faiss-cpu
 huggingface-hub
 sentence-transformers
-pypdf
-torch==2.0.1+cpu --extra-index-url https://download.pytorch.org/whl/cpu
-numpy # 
+numpy 
 
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.0.1+cpu  # Specify CPU-only version
 langchain-huggingface # New package for embeddings

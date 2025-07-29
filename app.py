@@ -50,5 +50,30 @@ def initialize_components():
     return qa
 
 qa_chain = initialize_components()
+HTML_TEMPLATE = """<!DOCTYPE html>
+<html>
+<head><title>Union Contract Assistant</title></head>
+<body>
+  <h1>Ask Your Union Contract</h1>
+  <form method="POST">
+    <input type="text" name="question" size="60" placeholder="Ask something..." required>
+    <input type="submit" value="Ask">
+  </form>
+  {% if answer %}
+    <h2>Answer:</h2>
+    <p>{{ answer }}</p>
+  {% endif %}
+</body>
+</html>"""
 
+@app.route("/", methods=["GET", "POST"])
+def index():
+    answer = ""
+    if request.method == "POST":
+        query = request.form["question"]
+        try:
+            answer = qa_chain.run(query)
+        except Exception as e:
+            answer = f"Error processing query: {str(e)}"
+    return render_template_string(HTML_TEMPLATE, answer=answer)
 # [Rest of your Flask app code remains the same]

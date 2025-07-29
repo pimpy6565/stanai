@@ -8,6 +8,6 @@ sentence-transformers
 numpy 
 
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.1+cpu  # Specify CPU-only version
+torch==2.1.0+cpu  # Specify CPU-only version
 langchain-huggingface # New package for embeddings
 pypdf==3.17.4  # Specific version to prevent large updates

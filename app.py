@@ -4,7 +4,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain_community.llms import HuggingFaceEndpoint
-from langchain_huggingface import HuggingFaceEndpointEmbeddings  # updated import
+from langchain_community.embeddings import HuggingFaceEmbeddings
 import os
 import warnings
 
@@ -18,7 +18,7 @@ EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"
 LLM_MODEL = "tiiuae/falcon-rw-1b"
 API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
-qa_chain = None  # Lazy loaded later
+qa_chain = None  # Lazy loaded on first request
 
 def initialize_components():
     print("Loading PDF...")
@@ -33,11 +33,10 @@ def initialize_components():
     )
     docs = splitter.split_documents(pages)
 
-    print("Loading hosted embeddings...")
-    embeddings = HuggingFaceEndpointEmbeddings(
-        huggingfacehub_api_token=API_TOKEN,
-        model=EMBEDDING_MODEL
-)
+    print("Creating embeddings...")
+    embeddings = HuggingFaceEmbeddings(
+        model_name=EMBEDDING_MODEL
+    )
 
     print("Creating vector store...")
     vectorstore = FAISS.from_documents(docs, embeddings)
@@ -52,13 +51,13 @@ def initialize_components():
         }
     )
 
-    print("Testing model output...")
+    print("Testing LLM output...")
     try:
         test_response = llm.invoke("Say hello")
         print("Model test response:", test_response)
     except Exception as e:
-        print("Model test error:", e)
-        raise RuntimeError("LLM failed to respond correctly. Check token and model status.")
+        print("LLM error:", e)
+        raise RuntimeError("LLM failed. Check your token or model ID.")
 
     print("Creating QA chain...")
     qa = RetrievalQA.from_chain_type(
@@ -96,11 +95,10 @@ def index():
                 qa_chain = initialize_components()
 
             print("Question submitted:", query)
-            result = qa_chain.invoke({"query": query})
-            answer = result["result"] if isinstance(result, dict) else result
+            answer = qa_chain.run(query)
 
             if not answer or answer.strip() == "":
-                print("Empty response received from model.")
+                print("Empty model response.")
                 answer = "Sorry, the model returned no answer."
 
             print("Answer received:", answer)
@@ -112,5 +110,5 @@ def index():
     return render_template_string(HTML_TEMPLATE, answer=answer)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # For Render
+    port = int(os.environ.get("PORT", 5000))  # for Render
     app.run(host="0.0.0.0", port=port)

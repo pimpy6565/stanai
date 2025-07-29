@@ -7,4 +7,6 @@ huggingface-hub
 sentence-transformers
 pypdf
 torch --extra-index-url https://download.pytorch.org/whl/cpu
-numpy # Explicitly added to prevent source build
+numpy # 
+
+langchain-huggingface # New package for embeddings

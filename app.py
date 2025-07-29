@@ -25,17 +25,21 @@ def initialize_components():
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
     vectorstore = FAISS.from_documents(docs, embeddings)
 
-    llm = HuggingFaceHub(
-        repo_id=LLM_MODEL,
-        huggingfacehub_api_token=API_TOKEN,
-        task="text2text-generation",
+    from transformers import pipeline
+    from langchain_community.llms import HuggingFacePipeline
+
+    pipe = pipeline(
+        "text2text-generation",
+        model=LLM_MODEL,
         model_kwargs={"temperature": 0.2, "max_length": 256}
     )
+
+    llm = HuggingFacePipeline(pipeline=pipe)
 
     try:
         llm.invoke("Hello")
     except Exception as e:
-        raise RuntimeError(f"LLM error — check token or model: {e}")
+        raise RuntimeError(f"LLM error — check model: {e}")
 
     return RetrievalQA.from_chain_type(
         llm=llm,

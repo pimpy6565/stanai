@@ -3,8 +3,8 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
-from langchain_community.llms import HuggingFaceHub
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.llms import Together
 import os, warnings
 
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -12,34 +12,25 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 app = Flask(__name__)
 PDF_PATH = "union_contract.pdf"
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"
-LLM_MODEL = "google/flan-t5-large"
-API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+TOGETHER_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"
+TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 qa_chain = None
 
 def initialize_components():
     loader = PyPDFLoader(PDF_PATH)
     pages = loader.load()
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=100)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200)
     docs = splitter.split_documents(pages)
 
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
     vectorstore = FAISS.from_documents(docs, embeddings)
 
-    from transformers import pipeline
-    from langchain_community.llms import HuggingFacePipeline
-
-    pipe = pipeline(
-        "text2text-generation",
-        model=LLM_MODEL,
-        model_kwargs={"temperature": 0.2, "max_length": 256}
+    llm = Together(
+        model=TOGETHER_MODEL,
+        api_key=TOGETHER_API_KEY,
+        temperature=0.3,
+        max_tokens=512
     )
-
-    llm = HuggingFacePipeline(pipeline=pipe)
-
-    try:
-        llm.invoke("Hello")
-    except Exception as e:
-        raise RuntimeError(f"LLM error — check model: {e}")
 
     return RetrievalQA.from_chain_type(
         llm=llm,

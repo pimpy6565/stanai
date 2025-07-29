@@ -15,7 +15,7 @@ app = Flask(__name__)
 # Configuration
 PDF_PATH = "union_contract.pdf"
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"
-LLM_MODEL = "tiiuae/falcon-rw-1b"
+LLM_MODEL = "google/flan-t5-small"
 API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 qa_chain = None  # Lazy loaded on first request

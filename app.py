@@ -7,6 +7,8 @@ from langchain_community.llms import HuggingFaceHub
 from langchain.chains import RetrievalQA
 import os
 
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 app = Flask(__name__)
 
 # Configuration

@@ -12,7 +12,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 app = Flask(__name__)
 PDF_PATH = "union_contract.pdf"
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"
-TOGETHER_MODEL = "mistralai/Mistral-7B-Instruct-v0.1"
+TOGETHER_MODEL = "mistralai/Mistral-7B-Instruct-v0.2"
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 qa_chain = None
 

@@ -27,7 +27,7 @@ def initialize_components():
 
     llm = Together(
         model=TOGETHER_MODEL,
-        api_key=TOGETHER_API_KEY,
+        
         temperature=0.3,
         max_tokens=512
     )

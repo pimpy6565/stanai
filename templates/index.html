@@ -4,39 +4,52 @@
   <meta charset="UTF-8">
   <title>Union Contract Assistant</title>
   <style>
-    body { background: #121212; color: #eee; font-family: sans-serif; max-width: 600px; margin: auto; padding: 2rem; }
-    h1 { color: #4fc3f7; }
-    input, button { width: 100%; padding: 12px; margin: .5em 0; border-radius: 6px; border: none; }
-    input { background: #1e1e1e; color: #eee; }
-    button { background: #2979ff; color: white; cursor: pointer; }
-    button:hover { background: #1565c0; }
-    #answer { background: #1e1e1e; margin-top: 1rem; padding: 1rem; border-left: 4px solid #4fc3f7; }
-    #error { color: #ff5252; margin-top: .5rem; }
+    body {
+      background-color: #1e1e1e;
+      color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      padding: 2em;
+    }
+    input[type="text"] {
+      width: 60%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+    input[type="submit"] {
+      padding: 10px 15px;
+      background-color: #2e8b57;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .answer {
+      margin-top: 1.5em;
+      font-size: 1.2em;
+    }
   </style>
 </head>
 <body>
-  <h1>Union Contract Assistant</h1>
-  <input id="question" placeholder="Ask something..." />
-  <button onclick="ask()">Ask</button>
-  <div id="answer"></div>
-  <div id="error"></div>
+  <h1>Ask About Your Union Contract</h1>
+  <form id="qa-form">
+    <input type="text" id="question" placeholder="Type your question..." required>
+    <input type="submit" value="Ask">
+  </form>
+  <div class="answer" id="answer"></div>
+
   <script>
-    async function ask() {
-      document.getElementById("answer").textContent = "Thinking...";
-      document.getElementById("error").textContent = "";
-      const resp = await fetch("/ask", {
-        method: "POST",
-        headers: { 'Content-Type':'application/json' },
-        body: JSON.stringify({ question: document.getElementById("question").value })
+    document.getElementById('qa-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const question = document.getElementById('question').value;
+      const res = await fetch('/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question })
       });
-      const data = await resp.json();
-      if (data.answer) {
-        document.getElementById("answer").textContent = data.answer;
-      } else {
-        document.getElementById("answer").textContent = "";
-        document.getElementById("error").textContent = data.error || "Unknown error.";
-      }
-    }
+      const data = await res.json();
+      document.getElementById('answer').innerText = data.answer || data.error || "Error occurred.";
+    });
   </script>
 </body>
 </html>

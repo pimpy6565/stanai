@@ -1,9 +1,10 @@
-Flask
+flask
+gunicorn
 langchain
 langchain-community
 langchain-text-splitters
-huggingface-hub
 sentence-transformers
 faiss-cpu
 pypdf
-gunicorn
+transformers
+torch

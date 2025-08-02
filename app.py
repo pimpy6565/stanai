@@ -16,18 +16,28 @@ TOGETHER_MODEL = "mistralai/Mistral-7B-Instruct-v0.2"
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
 qa_chain = None
 
+from langchain_community.document_loaders import TextLoader  # Add this import at the top
+
 def initialize_components():
-    loader = PyPDFLoader(PDF_PATH)
-    pages = loader.load()
+    # Load PDF
+    pdf_loader = PyPDFLoader(PDF_PATH)
+    pdf_pages = pdf_loader.load()
+    
+    # Load TXT
+    txt_loader = TextLoader("union.txt")
+    txt_pages = txt_loader.load()
+    
+    # Combine documents from both sources
+    all_pages = pdf_pages + txt_pages
+    
     splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200)
-    docs = splitter.split_documents(pages)
+    docs = splitter.split_documents(all_pages)  # Split the combined documents
 
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
     vectorstore = FAISS.from_documents(docs, embeddings)
 
     llm = Together(
         model=TOGETHER_MODEL,
-        
         temperature=0.3,
         max_tokens=512
     )

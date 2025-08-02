@@ -1,3 +1,53 @@
+# Job Title, Current Rate, 8/1/2024, 2/15/2025, 4/15/2026, 4/15/2027, 4/15/2028  
+
+# Hourly-Rated Employees  
+General Plant Worker, 24.50, 26.63, 27.69, 28.54, 29.39, 30.03  
+Syrup Room Certified, 25.95, 28.35, 29.75, 30.75, 31.55, 32.15  
+Packer Operator, 24.70, 26.83, 27.89, 28.74, 29.59, 30.23  
+Depalletizer Operator, 24.85, 26.98, 28.04, 28.89, 29.74, 30.38  
+Labeler/Case Erector, 24.85, 26.98, 28.04, 28.89, 29.74, 30.38  
+Filler Operator, 24.95, 27.08, 28.14, 28.99, 29.84, 30.48  
+Yard Jockey, 25.60, 27.73, 28.79, 29.84, 30.49, 31.13  
+Fork Lift Operator, 24.85, 27.40, 28.68, 29.74, 30.59, 31.23  
+Utility Relay and Extra Driver, 24.85, 26.98, 28.04, 28.89, 29.74, 30.38  
+Cooler Delivery Driver, 26.65, 28.78, 29.84, 30.69, 31.54, 32.18  
+Pre mix/Post Mix Routeman, 25.05, 27.18, 28.24, 29.09, 29.94, 30.58  
+Transport Driver, 25.60, 28.60, 30.10, 31.10, 31.95, 32.20  
+Full Service Driver, 24.85, 26.98, 28.04, 28.89, 29.74, 30.38  
+Bulk Driver, 28.45, 31.00, 32.28, 33.13, 33.98, 34.61  
+Merchandiser, 20.60, 22.73, 23.79, 24.64, 25.49, 26.13  
+Fleet Checker/Utility, 25.00, 27.13, 28.19, 29.04, 29.89, 30.53  
+Fleet Class 1 Mechanic, 25.90, 30.58, 32.06, 32.91, 33.76, 34.40  
+Fleet Master Mechanic, 28.20, 32.88, 34.36, 35.21, 36.06, 36.70  
+
+# Vending & Maintenance Roles  
+Vending Mechanic Trainee, 25.00, 27.55, 28.83, 29.68, 30.53, 31.16  
+Vending Class 1 Mechanic (Grandfathered), 28.10, 32.78, 34.26, 35.11, 35.96, 36.60  
+Vending Class 1 Mechanic (New Hires After 8/1/24), 25.90, 30.58, 32.06, 32.91, 33.76, 34.40  
+Vending Master Mechanic, 28.20, 32.88, 34.36, 35.21, 36.06, 36.70  
+Maintenance Tech L1 (Apprentice), 25.00, 27.55, 28.83, 29.68, 30.53, 31.16  
+Maintenance Tech L2 (C-Level), 28.10, 32.78, 34.26, 35.11, 35.96, 36.60  
+Maintenance Tech L3 (B-Level), 29.70, 34.38, 35.86, 36.71, 37.56, 38.20  
+Maintenance Tech L4 (A-Level), 32.30, 36.30, 37.78, 38.63, 39.48, 40.12  
+Maintenance Tech L5, 35.00, 38.32, 39.80, 40.65, 41.50, 42.14  
+Maintenance Tech L6, 36.00, 40.12, 41.61, 42.46, 43.31, 43.95  
+Production Engine Room, 29.70, 31.83, 32.89, 33.74, 34.59, 35.23  
+Production Gold Seal Mechanic, 34.15, 37.30, 38.57, 39.42, 40.27, 40.91  
+Building Electro Mechanic, 45.00, 47.13, 48.40, 49.25, 50.10, 50.74  
+
+# Commission & Allowances (Non-Hourly)  
+Driver Merchandisers (Weekly), 69.00, 74.95, 79.20, 82.60, 85.15, 87.70  
+Commission per Case, 0.3574, 0.3829, 0.4084, 0.4254, 0.4424, 0.4509  
+2 Liter Tray Return, 0.0700, 0.0743, 0.0785, 0.0785, 0.0785, 0.0785  
+Pre-Sales Reps (Weekly), 69.00, 77.50, 82.60, 84.30, 86.00, 87.70  
+Commission per Case (Pre-Sales), 0.1885, 0.2225, 0.2310, 0.2395, 0.2480, 0.2585  
+Car Allowance - Sales (Monthly), 560.00, 572.00, 584.00, 594.00, 604.00, 614.00  
+Mileage Reimbursement (per mile), 0.530, 0.5895, 0.6045, 0.6195, 0.6345, 0.6495  
+
+# Special Roles & Premiums  
+Blow Mold Operator, 26.20, 28.00, 29.35, 30.70, 31.60, 32.28  
+Night Premium (per hour), 0.350, 0.50, -, -, -, -
+
 MEMORANDUM OF AGREEMENT
 
 This Memorandum of Agreement is made by and between PEPSI-COLA & NATIONAL BRAND BEVERAGES, LTD., and BEVERAGE DISTRIBUTION CENTER, INC. (together referred to as "Employer" or "Company") and LOCAL 830, INTERNATIONAL BROTHERHOOD OF TEAMSTERS ("Union") (collectively referred to as "Parties") to extend the Parties' collective bargaining agreement ("2019 CBA") which expires on July 31, 2024, for an additional term to expire on April 14, 2029. This Memorandum of Agreement has been endorsed by the Union's bargaining committee and is subject to ratification by the Union's covered membership and upon such ratification, the Parties shall reduce the terms and conditions provided for herein into a new collective bargaining agreement.

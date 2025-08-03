@@ -1,8 +1,9 @@
 # Job Title, Current Rate, 8/1/2024, 2/15/2025, 4/15/2026, 4/15/2027, 4/15/2028  
 
 # Hourly-Rated Employees  
+lab tech, 25.95, 28.35, 29.75, 30.75, 31.55, 32.15
 General Plant Worker, 24.50, 26.63, 27.69, 28.54, 29.39, 30.03  
-Syrup Room and lab tech, 25.95, 28.35, 29.75, 30.75, 31.55, 32.15  
+Syrup Room, 25.95, 28.35, 29.75, 30.75, 31.55, 32.15  
 Packer Operator, 24.70, 26.83, 27.89, 28.74, 29.59, 30.23  
 Depalletizer Operator, 24.85, 26.98, 28.04, 28.89, 29.74, 30.38  
 Labeler/Case Erector, 24.85, 26.98, 28.04, 28.89, 29.74, 30.38  

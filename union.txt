@@ -1,3 +1,4 @@
+#hourly rates
 # Job Title, past Rate, 8/1/2024, 2/15/2025, 4/15/2026, 4/15/2027, 4/15/2028  
 
 # Hourly-Rated Employees  

@@ -59,6 +59,9 @@ def contract():
         mimetype="application/pdf"
     )
 
+@app.route("/download")
+def download_pdf():
+    return send_from_directory(os.getcwd(), PDF_NAME, as_attachment=True)
 
 @app.route("/ask", methods=["POST"])
 def ask():

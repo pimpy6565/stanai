@@ -45,20 +45,19 @@
   <div class="answer" id="answer"></div>
  <a href="{{ url_for('download_pdf') }}">Download Contract</a>
   <script>
-    document.getElementById('qa-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const question = document.getElementById('question').value;
-      const res = await fetch('/ask', {
+    
+document.getElementById('qa-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const question = document.getElementById('question').value;
+    const res = await fetch('/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question })
-      });
-      const data = await res.json();
-      document.getElementById('answer').innerText = data.answer || data.error || "Error occurred.";
     });
-
-    }
+    const data = await res.json();
+    document.getElementById('answer').innerText = data.answer || data.error || "Error occurred.";
 });
+
   </script>
 </body>
 </html>

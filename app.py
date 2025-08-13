@@ -51,6 +51,14 @@ def initialize_components():
 def index():
     return render_template("index.html")
 
+@app.route("/contract")
+def contract():
+    return send_from_directory(
+        directory=os.getcwd(), 
+        path="union_contract.pdf"
+    )
+
+
 @app.route("/ask", methods=["POST"])
 def ask():
     global qa_chain

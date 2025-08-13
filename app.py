@@ -55,7 +55,8 @@ def index():
 def contract():
     return send_from_directory(
         directory=os.getcwd(), 
-        path="union_contract.pdf"
+        path="union_contract.pdf",
+        mimetype="application/pdf"
     )
 
 

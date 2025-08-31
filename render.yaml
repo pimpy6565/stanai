@@ -8,6 +8,7 @@ services:
     buildCommand: |
       python -m pip install --upgrade pip setuptools wheel
       pip install --only-binary :all: --no-cache-dir -r requirements.txt
+      python build.py  # Add this to pre-build FAISS during deploy
     startCommand: gunicorn --worker-tmp-dir /dev/shm --workers=1 --threads=4 --timeout 120 app:app
     envVars:
       - key: PORT

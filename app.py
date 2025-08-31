@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template,send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
@@ -14,27 +14,14 @@ PDF_PATH = "union_contract.pdf"
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-MiniLM-L3-v2"
 TOGETHER_MODEL = "mistralai/Mistral-7B-Instruct-v0.2"
 TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
+FAISS_PATH = "faiss_index"
 qa_chain = None
 
-from langchain_community.document_loaders import TextLoader  # Add this import at the top
-
 def initialize_components():
-    # Load PDF
-    pdf_loader = PyPDFLoader(PDF_PATH)
-    pdf_pages = pdf_loader.load()
-    
-    # Load TXT
-    txt_loader = TextLoader("union.txt")
-    txt_pages = txt_loader.load()
-    
-    # Combine documents from both sources
-    all_pages = pdf_pages + txt_pages
-    
-    splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200)
-    docs = splitter.split_documents(all_pages)  # Split the combined documents
-
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
-    vectorstore = FAISS.from_documents(docs, embeddings)
+    
+    # Load pre-built FAISS (no need to load/split/embed docs)
+    vectorstore = FAISS.load_local(FAISS_PATH, embeddings, allow_dangerous_deserialization=True)
 
     llm = Together(
         model=TOGETHER_MODEL,
